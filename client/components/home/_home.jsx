@@ -15,6 +15,7 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   useEffect(async () => {
+    console.log("test")
     const res = await api.get('/users/me');
     setUser(res.user);
     setLoading(false);
