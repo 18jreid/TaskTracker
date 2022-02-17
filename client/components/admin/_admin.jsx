@@ -7,7 +7,10 @@ export const Admin = () => {
 
   useEffect(async () => {
     const { users } = await api.get('/users');
+    const { tasksMessage } = await api.get('/tasks');
+    const { projectsMessage } = await api.get('/projects');
     setUsers(users);
+    console.log("results: ", tasksMessage, projectsMessage);
   }, []);
 
   return (
