@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router';
 import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
-import { Button } from './Button';
-import { Project } from './Project';
+import { Button } from '../home/Button';
+import { Project } from '../Home/Project';
 
-export const Home = () => {
+export const Project = () => {
   const [, setAuthToken] = useContext(AuthContext);
   const api = useContext(ApiContext);
   const roles = useContext(RolesContext);
@@ -34,7 +34,7 @@ export const Home = () => {
       console.log('Success!');
       console.log(projects);
     } else {
-      alert('THERE ARE NO PROJECTS, YOU NEED TO CREATE ONE');
+      console.log('THERE ARE NO PROJECTS, YOU NEED TO CREATE ONE');
     }
   };
 
@@ -46,36 +46,10 @@ export const Home = () => {
     <div>
       <div className="bg-gray-500 p-3">
         <div className="grid grid-cols-3">
-          <Button type="button" onClick={() => navigate('/')}>
-            My Projects
-          </Button>
-          <Button type="button">My Tasks</Button>
+          <h1>PROJECT NAME</h1>
           <div className="text-right">
-            <h1 className="text-2xl inline-flex mr-2">Welcome {user.firstName}</h1>
-            <Button type="button" onClick={logout}>
-              Logout
-            </Button>
-            {roles.includes('admin') && (
-              <Button type="button" onClick={() => navigate('/admin')}>
-                Admin
-              </Button>
-            )}
           </div>
         </div>
-      </div>
-      <div className="grid grid-cols-4">
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 1
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 2
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 3
-        </Project>
-        <Project type="button" onClick={getProjects}>
-          Create New Project
-        </Project>
       </div>
     </div>
   );
