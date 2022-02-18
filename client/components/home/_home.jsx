@@ -4,7 +4,7 @@ import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from './Button';
-import { Project } from './Project';
+import { ProjectWidget } from './Project';
 
 export const Home = () => {
   const [, setAuthToken] = useContext(AuthContext);
@@ -64,18 +64,18 @@ export const Home = () => {
         </div>
       </div>
       <div className="grid grid-cols-4">
-        <Project type="button" onClick={() => navigate('/project')}>
+        <ProjectWidget type="button" onClick={() => navigate('/project')}>
           Project 1
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
+        </ProjectWidget>
+        <ProjectWidget type="button" onClick={() => navigate('/project')}>
           Project 2
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
+        </ProjectWidget>
+        <ProjectWidget type="button" onClick={() => navigate('/project')}>
           Project 3
-        </Project>
-        <Project type="button" onClick={getProjects}>
+        </ProjectWidget>
+        <ProjectWidget type="button" onClick={getProjects}>
           Create New Project
-        </Project>
+        </ProjectWidget>
       </div>
     </div>
   );
