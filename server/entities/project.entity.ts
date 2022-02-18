@@ -7,7 +7,7 @@ import { Task } from './task.entity';
 export class Project {
 
   @PrimaryGeneratedColumn()
-  projectID: number;
+  id: number;
 
   @Column({ nullable: false })
   title: string;
@@ -19,6 +19,12 @@ export class Project {
   @Column({ nullable: false })
   status: number
 
+  @Column()
+  createdByUserId: number;
+
+  @Column()
+  teamLeadId: number;
+
   // the user who created this projects
   @OneToOne(() => User)
   createdByUser: User;
@@ -28,7 +34,7 @@ export class Project {
   teamLead: User;
 
   // tasks for this project
-  @OneToMany(() => Task, task => task.project)
+  @OneToMany(() => Task, (task) => task.project)
   tasks: Task[];
   
   // users working on this project

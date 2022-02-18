@@ -6,7 +6,9 @@ import { Project } from 'server/entities/project.entity';
 
 
 class ProjectPostBody {
+  title: string;
   description: string;
+  status: number;
 }
 
 @Controller()
@@ -22,7 +24,11 @@ export class ProjectsController {
   @Post('/projects')
   public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: ProjectPostBody){
     let newProject = new Project();
+    newProject.title = body.title;
     newProject.description = body.description;
+    newProject.status = body.status;
+    newProject.createdByUserId = JwtBody.userId;
+    newProject.teamLeadId = JwtBody.userId;
     const project = await this.projectsService.createProject(newProject);
     return { project };
   }
