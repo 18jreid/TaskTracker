@@ -13,7 +13,7 @@ export class ProjectsService {
 
     async findAllForUser(userId: number): Promise<Project[]> {
         return await this.projectRepository.find({
-            where: { id: userId },
+            where: { createdByUserId: userId },
         });
     }
 
