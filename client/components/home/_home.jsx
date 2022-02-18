@@ -8,6 +8,8 @@ import { Project } from './Project';
 
 export const Home = () => {
   const [, setAuthToken] = useContext(AuthContext);
+  const [projects, setProjects] = useState([]);
+  const [hasProjects, setHasProjects] = useState(true);
   const api = useContext(ApiContext);
   const roles = useContext(RolesContext);
 
@@ -29,12 +31,13 @@ export const Home = () => {
   };
 
   const getProjects = async () => {
-    const projects = await api.get('/projects');
-    if (projects.success) {
-      console.log('Success!');
-      console.log(projects);
-    } else {
-      alert('THERE ARE NO PROJECTS, YOU NEED TO CREATE ONE');
+    if (hasProjects) {
+      if (projects.length == 0) {
+        const allProjects = await api.get('/projects');
+        setProjects(allProjects);
+        console.log(allProjects);
+        setHasProjects(false);
+      }
     }
   };
 
@@ -42,6 +45,7 @@ export const Home = () => {
     return <div>Loading...</div>;
   }
 
+  const loadProjects = getProjects();
   return (
     <div>
       <div className="bg-gray-500 p-3">
@@ -64,16 +68,10 @@ export const Home = () => {
         </div>
       </div>
       <div className="grid grid-cols-4">
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 1
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 2
-        </Project>
-        <Project type="button" onClick={() => navigate('/project')}>
-          Project 3
-        </Project>
-        <Project type="button" onClick={getProjects}>
+        {projects.map((project) => (
+          <Project type="button" key={project.id}>{project.title} {project.description} {project.status} {project.teamLeadId}</Project>
+        ))}
+        <Project type="button" onClick={() => navigate('/create_project')}>
           Create New Project
         </Project>
       </div>

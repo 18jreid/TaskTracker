@@ -4,7 +4,6 @@ import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from '../home/Button';
-import { Project } from '../Home/Project';
 
 export const Project = () => {
   const [, setAuthToken] = useContext(AuthContext);
