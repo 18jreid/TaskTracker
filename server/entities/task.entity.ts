@@ -20,13 +20,19 @@ export class Task {
 
   // here we can say that 1 will be complete and 0 will be incomplete
   @Column({ nullable: false })
-  status: number
+  status: number;
+
+  @Column()
+  userId: number;
+
+  @Column()
+  projectId: number;
 
   // the assigned user for this task (many tasks to one user)
-  @ManyToOne(() => User, user => user.tasks)
+  @ManyToOne(() => User, (user) => user.tasks)
   user: User;
 
   // the project this task belongs to
-  @ManyToOne(() => Project, project => project.tasks)
+  @ManyToOne(() => Project, (project) => project.tasks)
   project: Project;
 }

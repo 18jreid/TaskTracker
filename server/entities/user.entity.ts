@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, OneToOne
 import { RefreshToken } from './refresh_token.entity';
 import { UserRole } from './user_role.entity';
 import { Task } from './task.entity';
-import { Project } from './project.entity'
+import { Project } from './project.entity';
 
 
 
@@ -30,6 +30,6 @@ export class User {
   userRoles: UserRole[];
 
   // tasks assigned to this user across all projects
-  @OneToMany(() => Task, task => task.user)
+  @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
 }

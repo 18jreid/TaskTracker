@@ -6,7 +6,11 @@ import { Task } from 'server/entities/task.entity';
 
 
 class TaskPostBody {
+  title: string;
+  status: number;
+  timeEstimation: number;
   description: string;
+  projectId: number;
 }
 
 @Controller()
@@ -15,14 +19,21 @@ export class TasksController {
 
   @Get('/tasks')
   public async index(@JwtBody() JwtBody: JwtBodyDto){
+    //console.log("tasksController looks for tasks with userId: ", JwtBody.userId)
     const tasks = await this.tasksService.findAllForUser(JwtBody.userId);
-    return { tasks };
+    //console.log("tasksController returns: ", tasks)
+    return tasks;
   }
 
   @Post('/tasks')
   public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody){
     let newTask = new Task();
+    newTask.userId = JwtBody.userId;
+    newTask.title = body.title;
     newTask.description = body.description;
+    newTask.timeEstimation = body.timeEstimation;
+    newTask.status = body.status;
+    newTask.projectId = body.projectId;
     const task = await this.tasksService.createTask(newTask);
     return { task };
   }

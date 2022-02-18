@@ -11,9 +11,9 @@ export class ProjectsService {
         private projectRepository: Repository<Project>
     ){}
 
-    findAllForUser(userID: number): Promise<Project[]> {
-        return this.projectRepository.find({
-            where: { userID, },
+    async findAllForUser(userId: number): Promise<Project[]> {
+        return await this.projectRepository.find({
+            where: { id: userId },
         });
     }
 

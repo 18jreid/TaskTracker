@@ -11,10 +11,13 @@ export class TasksService {
         private taskRepository: Repository<Task>
     ){}
 
-    findAllForUser(userID: number): Promise<Task[]> {
-        return this.taskRepository.find({
-            where: { userID, },
+    async findAllForUser(user: number) {
+        //console.log("tasksService looks for tasks with userId: ", user)
+        const results = await this.taskRepository.find({
+            where: { userId: user },
         });
+        //console.log("tasksService returns: ", results)
+        return results;
     }
 
     findTaskById(taskID: number) {
