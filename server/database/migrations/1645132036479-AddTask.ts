@@ -24,9 +24,14 @@ export class AddTask1645132036479 implements MigrationInterface {
                     isNullable: false,
                 },
                 {
-                  name: 'user',
+                  name: 'userId',
                   type: 'int',
                   isNullable: false,
+                },
+                {
+                    name: 'title',
+                    type: 'text',
+                    isNullable: false,
                 },
                 {
                   name: 'description',
@@ -34,7 +39,7 @@ export class AddTask1645132036479 implements MigrationInterface {
                   isNullable: false,
                 },
                 {
-                  name: 'project',
+                  name: 'projectId',
                   type: 'int',
                   isNullable: false,
                 },
@@ -44,7 +49,7 @@ export class AddTask1645132036479 implements MigrationInterface {
         await queryRunner.createForeignKey(
             'task',
             new TableForeignKey({
-              columnNames: ['user'],
+              columnNames: ['userId'],
               referencedColumnNames: ['id'],
               referencedTableName: 'user',
               onDelete: 'CASCADE',
@@ -53,8 +58,8 @@ export class AddTask1645132036479 implements MigrationInterface {
         await queryRunner.createForeignKey(
             'task',
             new TableForeignKey({
-              columnNames: ['project'],
-              referencedColumnNames: ['projectID'],
+              columnNames: ['projectId'],
+              referencedColumnNames: ['id'],
               referencedTableName: 'project',
               onDelete: 'CASCADE',
             }),

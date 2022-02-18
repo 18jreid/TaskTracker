@@ -8,11 +8,16 @@ export class AddProject1645131828651 implements MigrationInterface {
               name: 'project',
               columns: [
                 {
-                  name: 'projectID',
+                  name: 'id',
                   type: 'int',
                   isPrimary: true,
                   isGenerated: true,
                 },
+                {
+                    name: 'title',
+                    type: 'text',
+                    isNullable: false,
+                  },
                 {
                   name: 'description',
                   type: 'text',
@@ -26,12 +31,12 @@ export class AddProject1645131828651 implements MigrationInterface {
                   default: "0",
                 },
                 {
-                  name: 'createdByUser',
+                  name: 'createdByUserId',
                   type: 'int',
                   isNullable: false,
                 },
                 {
-                  name: 'teamLead',
+                  name: 'teamLeadId',
                   type: 'int',
                   isNullable: false,
                 },
@@ -41,7 +46,7 @@ export class AddProject1645131828651 implements MigrationInterface {
         await queryRunner.createForeignKey(
             'project',
             new TableForeignKey({
-              columnNames: ['createdByUser'],
+              columnNames: ['createdByUserId'],
               referencedColumnNames: ['id'],
               referencedTableName: 'user',
               onDelete: 'CASCADE',
@@ -50,9 +55,51 @@ export class AddProject1645131828651 implements MigrationInterface {
         await queryRunner.createForeignKey(
             'project',
             new TableForeignKey({
-              columnNames: ['teamLead'],
+              columnNames: ['teamLeadId'],
               referencedColumnNames: ['id'],
               referencedTableName: 'user',
+              onDelete: 'CASCADE',
+            }),
+        );
+        await queryRunner.createTable(
+            new Table({
+              name: 'project_users_user',
+              columns: [
+                {
+                  name: 'id',
+                  type: 'int',
+                  isPrimary: true,
+                  isGenerated: true,
+                },
+                {
+                  name: 'projectId',
+                  type: 'int',
+                  isNullable: false,
+                },
+                {
+                  name: 'userId',
+                  type: 'int',
+                  isNullable: false,
+                },
+              ],
+            }),
+        );
+          await queryRunner.createForeignKey(
+            'project_users_user',
+            new TableForeignKey({
+              columnNames: ['userId'],
+              referencedColumnNames: ['id'],
+              referencedTableName: 'user',
+              onDelete: 'CASCADE',
+            }),
+        );
+      
+          await queryRunner.createForeignKey(
+            'project_users_user',
+            new TableForeignKey({
+              columnNames: ['projectId'],
+              referencedColumnNames: ['id'],
+              referencedTableName: 'project',
               onDelete: 'CASCADE',
             }),
         );
