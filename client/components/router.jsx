@@ -7,6 +7,7 @@ import { SignUp } from './sign_up/_sign_up';
 import { Admin } from './admin/_admin';
 import { Project } from './project/_project';
 import { CreateProject } from './CreateProject/_createProject';
+import { Tasks } from './tasks/_tasks';
 
 export const Router = () => {
   const [authToken] = useContext(AuthContext);
@@ -22,6 +23,7 @@ export const Router = () => {
       <Route path="signup" element={<SignUp />} />
       <Route path="project" element={<Project />} />
       <Route path="create_project" element={<CreateProject />} />
+      <Route path="tasks" element={<Tasks />} />
     </Routes>
   );
 };
