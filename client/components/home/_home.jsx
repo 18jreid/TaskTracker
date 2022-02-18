@@ -52,9 +52,11 @@ export const Home = () => {
           <Button type="button" onClick={() => navigate('/')} isactive="true">
             My Projects
           </Button>
-          <Button type="button" isactive="false" onClick={() => navigate('/tasks')}>My Tasks</Button>
+          <Button type="button" isactive="false" onClick={() => navigate('/tasks')}>
+            My Tasks
+          </Button>
           <div className="text-right">
-            <h1 className="text-2xl inline-flex mr-2">Welcome {user.firstName}</h1>
+            <h1 className="text-3xl inline-flex mr-2 pt-4 text-white">Welcome {user.firstName}!</h1>
             <Button type="button" onClick={logout}>
               Logout
             </Button>
@@ -68,11 +70,15 @@ export const Home = () => {
       </div>
       <div className="grid grid-cols-4">
         {projects.map((project) => (
-          <Project type="button" key={project.id}>{project.title} {project.status} {project.teamLeadId}</Project>
+          <Project
+            type="button"
+            key={project.id}
+            title={project.title}
+            description={project.description}
+            onClick={() => navigate('/project', (id = project.id))}
+          />
         ))}
-        <Project type="button" onClick={() => navigate('/create_project')}>
-          Create New Project
-        </Project>
+        <Project type="button" onClick={() => navigate('/create_project')} title="+" create="true" />
       </div>
     </div>
   );

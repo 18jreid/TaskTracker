@@ -57,7 +57,7 @@ export const Tasks = () => {
             My Tasks
           </Button>
           <div className="text-right">
-            <h1 className="text-2xl inline-flex mr-2">Welcome {user.firstName}</h1>
+            <h1 className="text-3xl inline-flex mr-2 pt-4 text-white">Welcome {user.firstName}!</h1>
             <Button type="button" onClick={logout}>
               Logout
             </Button>
@@ -66,9 +66,7 @@ export const Tasks = () => {
       </div>
       <div className="grid grid-cols-4">
         {tasks.map((task) => (
-          <Project type="button" key={task.taskID}>
-            {task.title} {task.description} {task.userId}
-          </Project>
+          <Project type="button" key={task.taskID} title={task.title} description={task.description}></Project>
         ))}
       </div>
     </div>
