@@ -15,6 +15,9 @@ export const Project = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [project, setProject] = useState(1);
+  const [loadingProject, setLoadingProject] = useState(true);
+  const [tasks, setTasks] = useState([]);
+
   useEffect(async () => {
     const res = await api.get('/users/me');
     setUser(res.user);
@@ -31,10 +34,13 @@ export const Project = () => {
   };
 
   const getProject = async () => {
-    const projects = await api.get('/projects');
-    for (x = 0; x < projects.length; x++) {
-      if (projects[x].id == id) {
-        setProject(projects[x]);
+    if (loadingProject) {
+      const projects = await api.get('/projects');
+      for (x = 0; x < projects.length; x++) {
+        if (projects[x].id == id) {
+          setProject(projects[x]);
+          setLoadingProject(false);
+        }
       }
     }
   };
@@ -63,6 +69,25 @@ export const Project = () => {
         </div>
       </div>
       <div className="bg-gray-600 p-3 grid grid-cols-1 text-center text-3xl text-white">{project.title}</div>
+      <div className="grid grid-cols-3 h-full">
+        <div className="grid-flow-row bg-gray-300 rounded-md m-1">
+          <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Not started</h1>
+          <div>test tasks</div>
+          <div>test tasks</div>
+        </div>
+        <div className="grid-flow-row bg-gray-300 rounded-md m-1">
+          <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">In progress</h1>
+          <div>test tasks</div>
+          <div>test tasks</div>
+          <div>test tasks</div>
+        </div>
+        <div className="grid-flow-row bg-gray-300 rounded-md m-1">
+          <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Completed</h1>
+          <div>test tasks</div>
+          <div>test tasks</div>
+          <div>test tasks</div>
+        </div>
+      </div>
     </div>
   );
 };
