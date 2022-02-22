@@ -28,7 +28,7 @@ export class TasksService {
     return results;
   }
 
-  async assignTaskToUserId(targetTaskId: number, targetUserId: number): Promise<Task[]> {
+  async assignTaskToUserId(targetTaskId: number, targetUserId: number) {
 
     const targetTask = await this.taskRepository.update({ taskID: targetTaskId }, {userId: targetUserId});
 
