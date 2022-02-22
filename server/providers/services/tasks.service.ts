@@ -3,35 +3,42 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from 'server/entities/task.entity';
 
-
 @Injectable()
 export class TasksService {
-    constructor(
-        @InjectRepository(Task)
-        private taskRepository: Repository<Task>
-    ){}
+  constructor(
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
+  ) {}
 
-    async findAllForUser(user: number) {
-        //console.log("tasksService looks for tasks with userId: ", user)
-        const results = await this.taskRepository.find({
-            where: { userId: user },
-        });
-        //console.log("tasksService returns: ", results)
-        return results;
-    }
+  async findAllForUser(user: number) {
+    //console.log("tasksService looks for tasks with userId: ", user)
+    const results = await this.taskRepository.find({
+      where: { userId: user },
+    });
+    // console.log("tasksService returns: ", results)
+    return results;
+  }
 
-    findTaskById(taskID: number) {
-        return this.taskRepository.findOne({
-            where: { taskID, },
-        });
-    }
+  async findAllTasksForProject(id: number) {
+    //console.log("tasksService looks for tasks with userId: ", user)
+    const results = await this.taskRepository.find({
+      where: { projectId: id },
+    });
+    // console.log("tasksService returns: ", results)
+    return results;
+  }
 
-    createTask(task: Task): Promise<Task> {
-        return this.taskRepository.save(task);
-    }
+  findTaskById(taskID: number) {
+    return this.taskRepository.findOne({
+      where: { taskID },
+    });
+  }
 
-    deleteTask(task: Task) {
-        return this.taskRepository.delete(task);
-    }
+  createTask(task: Task): Promise<Task> {
+    return this.taskRepository.save(task);
+  }
+
+  deleteTask(task: Task) {
+    return this.taskRepository.delete(task);
+  }
 }
-

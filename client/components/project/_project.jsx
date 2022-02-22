@@ -4,7 +4,7 @@ import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from '../home/Button';
-import { CreateTaskButton } from './CreateTaskButton';
+import { TaskWidget } from './TaskWidget';
 
 export const Project = () => {
   const [, setAuthToken] = useContext(AuthContext);
@@ -18,11 +18,15 @@ export const Project = () => {
   const [project, setProject] = useState(1);
   const [loadingProject, setLoadingProject] = useState(true);
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(async () => {
     const res = await api.get('/users/me');
     setUser(res.user);
     setLoading(false);
+
+    const allUsers = await api.get('/users');
+    setUsers(allUsers.users);
   }, []);
 
   const logout = async () => {
@@ -43,8 +47,28 @@ export const Project = () => {
           setLoadingProject(false);
         }
       }
+      const allTasks = await api.post('/tasks/project', {
+        title: project.title,
+        status: 0,
+        timeEstimation: 1,
+        description: project.description,
+        projectId: project.id,
+      });
+
+      setTasks(allTasks);
     }
   };
+
+  function findUserById(id) {
+    let name = '';
+    for (let x = 0; x < users.length; x++) {
+      if (users[x].id == id) {
+        name = users[x].firstName + ' ' + users[x].lastName;
+      }
+    }
+
+    return name;
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -78,15 +102,23 @@ export const Project = () => {
           Create New Task
         </button>
       </div>
-      <div className="grid grid-cols-3 h-full">
+      <div className="grid grid-cols-3 h-full m-3">
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Not started</h1>
+          {tasks.map((task) => (
+            <TaskWidget
+              title={task.title}
+              description={task.description}
+              assigned={findUserById(task.userId)}
+              onClick={() => findUserById(task.userId)}
+            ></TaskWidget>
+          ))}
         </div>
-        <div className="grid-flow-row bg-gray-300 rounded-md m-1">
-          <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">In progress</h1>
+        <div className="grid-flow-row bg-red-300 rounded-md m-1">
+          <h1 className="text-center text-3xl bg-red-400 rounded-t-md rounded-tr-md">In progress</h1>
         </div>
-        <div className="grid-flow-row bg-gray-300 rounded-md m-1">
-          <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Completed</h1>
+        <div className="grid-flow-row bg-green-300 rounded-md m-1">
+          <h1 className="text-center text-3xl bg-green-400 rounded-t-md rounded-tr-md">Completed</h1>
         </div>
       </div>
     </div>

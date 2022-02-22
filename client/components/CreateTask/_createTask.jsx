@@ -19,7 +19,7 @@ export const CreateTask = () => {
     setUser(res.user);
   }, []);
 
-  const printName = async () => {
+  const createTask = async () => {
     let worked = await api.post('/tasks', {
       title: taskName,
       description: taskDescription,
@@ -46,7 +46,7 @@ export const CreateTask = () => {
               Cancel
             </Button>
             <div className="pl-2" />
-            <Button type="button" onClick={printName}>
+            <Button type="button" onClick={createTask}>
               Create Task
             </Button>
           </div>
