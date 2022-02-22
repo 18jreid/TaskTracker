@@ -1,17 +1,14 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from 'server/entities/project.entity';
-import { ProjectUsers } from 'server/entities/project_users.entity';
 
 
 @Injectable()
 export class ProjectsService {
     constructor(
         @InjectRepository(Project)
-        private projectRepository: Repository<Project>,
-        @InjectRepository(ProjectUsers)
-        private projectUsersRepository: Repository<ProjectUsers>
+        private projectRepository: Repository<Project>
     ){}
 
     async findAllForUser(userId: number): Promise<Project[]> {
@@ -32,26 +29,6 @@ export class ProjectsService {
 
     deleteProject(project: Project) {
         return this.projectRepository.delete(project);
-    }
-    
-    async findAllUsersForProject(givenId: number): Promise<ProjectUsers[]> {
-        return await this.projectUsersRepository.find({
-            where: { projectId: givenId },
-        });
-    }
-
-    async findAllProjectsForUser(givenId: number): Promise<ProjectUsers[]> {
-        return this.projectUsersRepository.find({
-            where: { userId: givenId },
-        });
-    }
-
-    createProjectUser(projectUsers: ProjectUsers): Promise<ProjectUsers> {
-        return this.projectUsersRepository.save(projectUsers);
-    }
-
-    deleteProjectUser(projectUsers: ProjectUsers) {
-        return this.projectUsersRepository.delete(projectUsers);
     }
 }
 
