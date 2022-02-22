@@ -25,6 +25,12 @@ export class TasksController {
     return tasks;
   }
 
+  @Post('/tasks/project')
+  public async index1(@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody){
+    const tasks = await this.tasksService.findAllTasksForProject(body.projectId);
+    return tasks;
+  }
+
   @Post('/tasks')
   public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody){
     let newTask = new Task();

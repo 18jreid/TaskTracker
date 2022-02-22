@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router';
 import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
-import { Button } from './Button';
-import { Project } from './Project';
+import { Button } from '../home/Button';
+import { Project } from '../home/Project';
 
-export const Home = () => {
+export const Tasks = () => {
   const [, setAuthToken] = useContext(AuthContext);
-  const [projects, setProjects] = useState([]);
-  const [hasProjects, setHasProjects] = useState(true);
+  const [tasks, setTasks] = useState([]);
+  const [hasTasks, setHasTasks] = useState(true);
   const api = useContext(ApiContext);
-  const roles = useContext(RolesContext);
 
   const navigate = useNavigate();
 
@@ -28,14 +27,16 @@ export const Home = () => {
     if (res.success) {
       setAuthToken(null);
     }
+
+    navigate('/signin');
   };
 
-  const getProjects = async () => {
-    if (hasProjects) {
-      if (projects.length == 0) {
-        const allProjects = await api.get('/projects');
-        setProjects(allProjects);
-        setHasProjects(false);
+  const getTasks = async () => {
+    if (hasTasks) {
+      if (tasks.length == 0) {
+        const tasks = await api.get('/tasks');
+        setTasks(tasks);
+        setHasTasks(false);
       }
     }
   };
@@ -44,15 +45,15 @@ export const Home = () => {
     return <div>Loading...</div>;
   }
 
-  const loadProjects = getProjects();
+  const loadTasks = getTasks();
   return (
     <div>
       <div className="bg-gray-500 p-3">
         <div className="grid grid-cols-3">
-          <Button type="button" onClick={() => navigate('/')} isactive="true">
+          <Button type="button" onClick={() => navigate('/')} isactive="false">
             My Projects
           </Button>
-          <Button type="button" isactive="false" onClick={() => navigate('/tasks')}>
+          <Button type="button" isactive="true" onClick={() => navigate('/tasks')}>
             My Tasks
           </Button>
           <div className="text-right">
@@ -60,25 +61,13 @@ export const Home = () => {
             <Button type="button" onClick={logout}>
               Logout
             </Button>
-            {roles.includes('admin') && (
-              <Button type="button" onClick={() => navigate('/admin')}>
-                Admin
-              </Button>
-            )}
           </div>
         </div>
       </div>
       <div className="grid grid-cols-4">
-        {projects.map((project) => (
-          <Project
-            type="button"
-            key={project.id}
-            title={project.title}
-            description={project.description}
-            onClick={() => navigate('/project', (id = project.id))}
-          />
+        {tasks.map((task) => (
+          <Project type="button" key={task.taskID} title={task.title} description={task.description}></Project>
         ))}
-        <Project type="button" onClick={() => navigate('/create_project')} title="+" create="true" />
       </div>
     </div>
   );
