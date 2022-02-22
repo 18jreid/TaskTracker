@@ -4,6 +4,7 @@ import { ApiContext } from '../../utils/api_context';
 import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from '../home/Button';
+import { CreateTaskButton } from './CreateTaskButton';
 
 export const Project = () => {
   const [, setAuthToken] = useContext(AuthContext);
@@ -68,24 +69,24 @@ export const Project = () => {
           </div>
         </div>
       </div>
-      <div className="bg-gray-600 p-3 grid grid-cols-1 text-center text-3xl text-white">{project.title}</div>
+      <div className="bg-gray-600 p-3 grid grid-cols-2 text-center text-3xl">
+        <div className="pt-6 text-white">{project.title}</div>
+        <button
+          className="shadow-md m-4 text-center bg-gray-300 rounded-md text-4xl p-4"
+          onClick={() => navigate('/create_task', (projectId = project.id))}
+        >
+          Create New Task
+        </button>
+      </div>
       <div className="grid grid-cols-3 h-full">
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Not started</h1>
-          <div>test tasks</div>
-          <div>test tasks</div>
         </div>
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">In progress</h1>
-          <div>test tasks</div>
-          <div>test tasks</div>
-          <div>test tasks</div>
         </div>
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Completed</h1>
-          <div>test tasks</div>
-          <div>test tasks</div>
-          <div>test tasks</div>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { Admin } from './admin/_admin';
 import { Project } from './project/_project';
 import { CreateProject } from './CreateProject/_createProject';
 import { Tasks } from './tasks/_tasks';
+import { CreateTask } from './CreateTask/_createTask';
 
 export const Router = () => {
   const [authToken] = useContext(AuthContext);
@@ -24,6 +25,7 @@ export const Router = () => {
       <Route path="project" element={<Project />} />
       <Route path="create_project" element={<CreateProject />} />
       <Route path="tasks" element={<Tasks />} />
+      <Route path="create_task" element={<CreateTask />} />
     </Routes>
   );
 };

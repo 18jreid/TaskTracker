@@ -1,12 +1,8 @@
-import { Paper } from '../common/paper';
-
 export const Project = ({ children, ...props }) => {
   if (props.create == 'true') {
     return (
       <div className="shadow-md m-4 text-center bg-gray-300 rounded-md text-9xl pb-4" {...props}>
-        <button className="h-full w-full">
-        {props.title}
-        </button>
+        <button className="h-full w-full">{props.title}</button>
       </div>
     );
   } else {
