@@ -4,7 +4,6 @@ import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Task } from 'server/entities/task.entity';
 
-
 class TaskPostBody {
   title: string;
   status: number;
@@ -15,10 +14,10 @@ class TaskPostBody {
 
 @Controller()
 export class TasksController {
-  constructor(private tasksService: TasksService){}
+  constructor(private tasksService: TasksService) {}
 
   @Get('/tasks')
-  public async index(@JwtBody() JwtBody: JwtBodyDto){
+  public async index(@JwtBody() JwtBody: JwtBodyDto) {
     //console.log("tasksController looks for tasks with userId: ", JwtBody.userId)
     const tasks = await this.tasksService.findAllForUser(JwtBody.userId);
     //console.log("tasksController returns: ", tasks)
@@ -26,13 +25,37 @@ export class TasksController {
   }
 
   @Post('/tasks/project')
-  public async index1(@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody){
+  public async index1(@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody) {
     const tasks = await this.tasksService.findAllTasksForProject(body.projectId);
     return tasks;
   }
 
+  @Post('/tasks/notStarted')
+  public async index2(@Body() body) {
+    const tasks = await this.tasksService.setTaskToNotStarted(body.id);
+    return tasks;
+  }
+
+  @Post('/tasks/inProgress')
+  public async index3(@Body() body) {
+    const tasks = await this.tasksService.setTaskToInProgress(body.id);
+    return tasks;
+  }
+
+  @Post('/tasks/completed')
+  public async index4(@Body() body) {
+    const tasks = await this.tasksService.setTaskToCompleted(body.id);
+    return tasks;
+  }
+
+  @Post('/tasks/assign')
+  public async index5(@Body() body) {
+    const tasks = await this.tasksService.assignTaskToUserId(body.taskId, body.userId);
+    return tasks;
+  }
+
   @Post('/tasks')
-  public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody){
+  public async create(@JwtBody() JwtBody: JwtBodyDto, @Body() body: TaskPostBody) {
     let newTask = new Task();
     newTask.userId = JwtBody.userId;
     newTask.title = body.title;
@@ -45,10 +68,10 @@ export class TasksController {
   }
 
   @Delete('/tasks:id')
-  public async destroy (@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto){
+  public async destroy(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto) {
     const task = await this.tasksService.findTaskById(parseInt(id, 10));
     if (task.user.id !== JwtBody.userId) {
-      throw new HttpException("Unauthorized", 401);
+      throw new HttpException('Unauthorized', 401);
     }
     this.tasksService.deleteTask(task);
     return { success: true };

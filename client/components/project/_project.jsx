@@ -22,6 +22,8 @@ export const Project = () => {
   const [inProgress, setInProgres] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [users, setUsers] = useState([]);
+  const [people, setPeople] = useState([]);
+  const [canDelete, setCanDelete] = useState(false);
 
   useEffect(async () => {
     const res = await api.get('/users/me');
@@ -43,13 +45,9 @@ export const Project = () => {
 
   const getProject = async () => {
     if (loadingProject) {
-      const projects = await api.get('/projects');
-      for (x = 0; x < projects.length; x++) {
-        if (projects[x].id == id) {
-          setProject(projects[x]);
-          setLoadingProject(false);
-        }
-      }
+      const projects = await api.get('/projects:id=' + id);
+      setProject(projects);
+      setLoadingProject(false);
       const allTasks = await api.post('/tasks/project', {
         title: project.title,
         status: 0,
@@ -59,8 +57,15 @@ export const Project = () => {
       });
 
       setTasks(allTasks);
-
       sortTasks(allTasks);
+      const allUsers = await api.get('/users');
+
+      if (project.createdByUserId == user.id) {
+        setPeople(allUsers.users);
+        setCanDelete(true);
+      } else {
+        setPeople([user]);
+      }
     }
   };
 
@@ -85,9 +90,29 @@ export const Project = () => {
     setCompleted(completed);
   }
 
-  function setTask(task, value) {
+  async function setTask(task, value) {
+    if (value == 0) {
+      const apiCall = await api.post('/tasks/notStarted', { id: task.taskID });
+    }
+    if (value == 1) {
+      const apiCall = await api.post('/tasks/inProgress', { id: task.taskID });
+    }
+    if (value == 2) {
+      const apiCall = await api.post('/tasks/completed', { id: task.taskID });
+    }
     task.status = value;
     sortTasks(tasks);
+  }
+
+  async function setAssigned(task, email) {
+    let myUser = null;
+    for (let x = 0; x < users.length; x++) {
+      if (users[x].email == email) {
+        myUser = users[x];
+      }
+    }
+    task.userId = myUser;
+    const callApi = await api.post('/tasks/assign', { taskId: task.taskID, userId: myUser.id });
   }
 
   function findUserById(id) {
@@ -100,6 +125,12 @@ export const Project = () => {
 
     return name;
   }
+
+  const deleteProject = async () => {
+    const callApi = await api.del('/projects' + project.id);
+
+    navigate('/');
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -126,12 +157,36 @@ export const Project = () => {
       </div>
       <div className="bg-gray-600 p-3 grid grid-cols-2 text-center text-3xl">
         <div className="pt-6 text-white">{project.title}</div>
-        <button
-          className="shadow-md m-4 text-center bg-gray-300 rounded-md text-4xl p-4"
-          onClick={() => navigate('/create_task', (projectId = project.id))}
-        >
-          Create New Task
-        </button>
+        <div>
+          {canDelete && (
+            <button
+              className="shadow-md m-4 text-center bg-gray-300 rounded-md text-2xl p-3"
+              onClick={() => navigate('/add_user', (projectId = project.id))}
+            >
+              Add User to project
+            </button>
+          )}
+          <button
+            className="shadow-md m-4 text-center bg-gray-300 rounded-md text-2xl p-3"
+            onClick={() => navigate('/create_task', (projectId = project.id))}
+          >
+            Create New Task
+          </button>
+          {canDelete && (
+            <button
+              className="shadow-md m-4 text-center bg-red-500 rounded-md text-2xl p-3 text-white"
+              onClick={deleteProject}
+            >
+              Delete Project
+            </button>
+          )}
+          {/* <button
+            className="shadow-md m-4 text-center bg-red-500 rounded-md text-2xl p-3 text-white"
+            onClick={deleteProject}
+          >
+            Delete Project
+          </button> */}
+        </div>
       </div>
       <div className="grid grid-cols-3 h-full m-3">
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
@@ -140,9 +195,12 @@ export const Project = () => {
             <TaskWidget
               title={task.title}
               description={task.description}
+              timeEstimation={task.timeEstimation}
               assigned={findUserById(task.userId)}
               increaseProgress={() => setTask(task, 1)}
               progress={0}
+              people={people}
+              onValueChange={(e) => setAssigned(task, e.target.value)}
             ></TaskWidget>
           ))}
         </div>
@@ -152,10 +210,12 @@ export const Project = () => {
             <TaskWidget
               title={task.title}
               description={task.description}
+              timeEstimation={task.timeEstimation}
               assigned={findUserById(task.userId)}
               increaseProgress={() => setTask(task, 2)}
               decreaseProgress={() => setTask(task, 0)}
               progress={1}
+              people={people}
             ></TaskWidget>
           ))}
         </div>
@@ -165,10 +225,12 @@ export const Project = () => {
             <TaskWidget
               title={task.title}
               description={task.description}
+              timeEstimation={task.timeEstimation}
               assigned={findUserById(task.userId)}
               increaseProgress={() => setTask(task, 2)}
               decreaseProgress={() => setTask(task, 1)}
               progress={2}
+              people={people}
             ></TaskWidget>
           ))}
         </div>

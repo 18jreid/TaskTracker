@@ -20,7 +20,6 @@ export class TasksService {
   }
 
   async findAllTasksForProject(id: number) {
-    //console.log("tasksService looks for tasks with userId: ", user)
     const results = await this.taskRepository.find({
       where: { projectId: id },
     });
@@ -29,11 +28,10 @@ export class TasksService {
   }
 
   async assignTaskToUserId(targetTaskId: number, targetUserId: number) {
-
-    const targetTask = await this.taskRepository.update({ taskID: targetTaskId }, {userId: targetUserId});
+    const targetTask = await this.taskRepository.update({ taskID: targetTaskId }, { userId: targetUserId });
 
     return targetTask;
-}
+  }
 
   findTaskById(taskID: number) {
     return this.taskRepository.findOne({
@@ -47,5 +45,23 @@ export class TasksService {
 
   deleteTask(task: Task) {
     return this.taskRepository.delete(task);
+  }
+
+  async setTaskToInProgress(givenId: number) {
+    const targetProject = await this.taskRepository.update({ taskID: givenId }, { status: 1 });
+
+    return targetProject;
+  }
+
+  async setTaskToNotStarted(givenId: number) {
+    const targetProject = await this.taskRepository.update({ taskID: givenId }, { status: 0 });
+
+    return targetProject;
+  }
+
+  async setTaskToCompleted(givenId: number) {
+    const targetProject = await this.taskRepository.update({ taskID: givenId }, { status: 2 });
+
+    return targetProject;
   }
 }

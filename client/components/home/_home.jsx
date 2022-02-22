@@ -32,11 +32,18 @@ export const Home = () => {
 
   const getProjects = async () => {
     if (hasProjects) {
-      if (projects.length == 0) {
-        const allProjects = await api.get('/projects');
-        setProjects(allProjects);
-        setHasProjects(false);
+      const allProjects = await api.get('/projects/user');
+
+      let totalProjects = [];
+      if (allProjects.length != 0) {
+        for (let x = 0; x < allProjects.length; x++) {
+          const test = await api.get('/projects:id=' + allProjects[x].projectId);
+          totalProjects.push(test);
+        }
       }
+
+      setProjects(totalProjects);
+      setHasProjects(false);
     }
   };
 

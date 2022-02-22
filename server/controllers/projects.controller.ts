@@ -5,7 +5,6 @@ import { ProjectsService } from '../providers/services/projects.service';
 import { Project } from 'server/entities/project.entity';
 import { ProjectUsers } from 'server/entities/project_users.entity';
 
-
 class ProjectPostBody {
   title: string;
   description: string;
@@ -14,22 +13,28 @@ class ProjectPostBody {
 
 @Controller()
 export class ProjectsController {
-  constructor(private projectsService: ProjectsService){}
+  constructor(private projectsService: ProjectsService) {}
 
   @Get('/projects')
-  public async index(@JwtBody() JwtBody: JwtBodyDto){
+  public async index(@JwtBody() JwtBody: JwtBodyDto) {
     const projects = await this.projectsService.findAllForUser(JwtBody.userId);
     return projects;
   }
-  
+
+  @Get('/projects/user')
+  public async indexProjectsForUser(@JwtBody() JwtBody: JwtBodyDto) {
+    const projects = await this.projectsService.findAllProjectsForUser(JwtBody.userId);
+    return projects;
+  }
+
   @Get('/projects:id')
-  public async indexFromId(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto){
-    const projects = await this.projectsService.findAllForUser(parseInt(id, 10));
+  public async indexFromId(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto) {
+    const projects = await this.projectsService.findProjectById(parseInt(id.slice(4)));
     return projects;
   }
 
   @Post('/projects')
-  public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: ProjectPostBody){
+  public async create(@JwtBody() JwtBody: JwtBodyDto, @Body() body: ProjectPostBody) {
     let newProject = new Project();
     newProject.title = body.title;
     newProject.description = body.description;
@@ -46,11 +51,22 @@ export class ProjectsController {
     return { project };
   }
 
+  @Post('/projects/newUser')
+  public async createNewProjectUser(@JwtBody() JwtBody: JwtBodyDto, @Body() body) {
+    const newProjectUser = new ProjectUsers();
+    newProjectUser.projectId = body.projectId;
+    newProjectUser.userId = body.userId;
+    const addedProjectUser = await this.projectsService.createProjectUser(newProjectUser);
+
+    return { addedProjectUser };
+  }
+
   @Delete('/projects:id')
-  public async destroy (@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto){
-    const project = await this.projectsService.findProjectById(parseInt(id, 10));
-    if (project.createdByUser.id !== JwtBody.userId) {
-      throw new HttpException("Unauthorized", 401);
+  public async destroy(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto) {
+    console.log(id);
+    const project = await this.projectsService.findProjectById(parseInt(id));
+    if (project.createdByUserId !== JwtBody.userId) {
+      throw new HttpException('Unauthorized', 401);
     }
     this.projectsService.deleteProject(project);
     return { success: true };
