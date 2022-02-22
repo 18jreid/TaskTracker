@@ -18,6 +18,9 @@ export const Project = () => {
   const [project, setProject] = useState(1);
   const [loadingProject, setLoadingProject] = useState(true);
   const [tasks, setTasks] = useState([]);
+  const [notStarted, setNotStarted] = useState([]);
+  const [inProgress, setInProgres] = useState([]);
+  const [completed, setCompleted] = useState([]);
   const [users, setUsers] = useState([]);
 
   useEffect(async () => {
@@ -56,8 +59,36 @@ export const Project = () => {
       });
 
       setTasks(allTasks);
+
+      sortTasks(allTasks);
     }
   };
+
+  function sortTasks(allTasks) {
+    let notStarted = [];
+    let inProgress = [];
+    let completed = [];
+    for (let x = 0; x < allTasks.length; x++) {
+      if (allTasks[x].status == 0) {
+        notStarted.push(allTasks[x]);
+      }
+      if (allTasks[x].status == 1) {
+        inProgress.push(allTasks[x]);
+      }
+      if (allTasks[x].status == 2) {
+        completed.push(allTasks[x]);
+      }
+    }
+
+    setNotStarted(notStarted);
+    setInProgres(inProgress);
+    setCompleted(completed);
+  }
+
+  function setTask(task, value) {
+    task.status = value;
+    sortTasks(tasks);
+  }
 
   function findUserById(id) {
     let name = '';
@@ -105,20 +136,41 @@ export const Project = () => {
       <div className="grid grid-cols-3 h-full m-3">
         <div className="grid-flow-row bg-gray-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-gray-400 rounded-t-md rounded-tr-md">Not started</h1>
-          {tasks.map((task) => (
+          {notStarted.map((task) => (
             <TaskWidget
               title={task.title}
               description={task.description}
               assigned={findUserById(task.userId)}
-              onClick={() => findUserById(task.userId)}
+              increaseProgress={() => setTask(task, 1)}
+              progress={0}
             ></TaskWidget>
           ))}
         </div>
         <div className="grid-flow-row bg-red-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-red-400 rounded-t-md rounded-tr-md">In progress</h1>
+          {inProgress.map((task) => (
+            <TaskWidget
+              title={task.title}
+              description={task.description}
+              assigned={findUserById(task.userId)}
+              increaseProgress={() => setTask(task, 2)}
+              decreaseProgress={() => setTask(task, 0)}
+              progress={1}
+            ></TaskWidget>
+          ))}
         </div>
         <div className="grid-flow-row bg-green-300 rounded-md m-1">
           <h1 className="text-center text-3xl bg-green-400 rounded-t-md rounded-tr-md">Completed</h1>
+          {completed.map((task) => (
+            <TaskWidget
+              title={task.title}
+              description={task.description}
+              assigned={findUserById(task.userId)}
+              increaseProgress={() => setTask(task, 2)}
+              decreaseProgress={() => setTask(task, 1)}
+              progress={2}
+            ></TaskWidget>
+          ))}
         </div>
       </div>
     </div>
