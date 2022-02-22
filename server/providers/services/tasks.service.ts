@@ -28,6 +28,13 @@ export class TasksService {
     return results;
   }
 
+  async assignTaskToUserId(targetTaskId: number, targetUserId: number): Promise<Task[]> {
+
+    const targetTask = await this.taskRepository.update({ taskID: targetTaskId }, {userId: targetUserId});
+
+    return targetTask;
+}
+
   findTaskById(taskID: number) {
     return this.taskRepository.findOne({
       where: { taskID },
