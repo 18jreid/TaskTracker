@@ -3,6 +3,7 @@ import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { ProjectsService } from '../providers/services/projects.service';
 import { Project } from 'server/entities/project.entity';
+import { ProjectUsers } from 'server/entities/project_users.entity';
 
 
 class ProjectPostBody {
@@ -30,6 +31,12 @@ export class ProjectsController {
     newProject.createdByUserId = JwtBody.userId;
     newProject.teamLeadId = JwtBody.userId;
     const project = await this.projectsService.createProject(newProject);
+
+    const newProjectUser = new ProjectUsers();
+    newProjectUser.projectId = project.id;
+    newProjectUser.userId = JwtBody.userId;
+    const addedProjectUser = await this.projectsService.createProjectUser(newProjectUser);
+
     return { project };
   }
 
