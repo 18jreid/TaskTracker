@@ -46,21 +46,21 @@ export class ProjectsService {
         });
     }
 
-    async setProjectToCompleted(givenId: number): Promise<Project[]> {
+    async setProjectToCompleted(givenId: number) {
 
         const targetProject = await this.projectRepository.update({ id: givenId }, {status:2});
 
         return targetProject;
     }
 
-    async setProjectToInProgress(givenId: number): Promise<Project[]> {
+    async setProjectToInProgress(givenId: number) {
 
         const targetProject = await this.projectRepository.update({ id: givenId }, {status: 1});
 
         return targetProject;
     }
 
-    async setProjectToNotStarted(givenId: number): Promise<Project[]> {
+    async setProjectToNotStarted(givenId: number) {
 
         const targetProject = await this.projectRepository.update({ id: givenId }, {status: 0});
 

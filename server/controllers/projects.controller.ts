@@ -21,6 +21,12 @@ export class ProjectsController {
     const projects = await this.projectsService.findAllForUser(JwtBody.userId);
     return projects;
   }
+  
+  @Get('/projects:id')
+  public async indexFromId(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto){
+    const projects = await this.projectsService.findAllForUser(parseInt(id, 10));
+    return projects;
+  }
 
   @Post('/projects')
   public async create (@JwtBody() JwtBody: JwtBodyDto, @Body() body: ProjectPostBody){
