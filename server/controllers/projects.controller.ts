@@ -3,7 +3,7 @@ import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { ProjectsService } from '../providers/services/projects.service';
 import { Project } from 'server/entities/project.entity';
-
+import { ProjectUsers } from 'server/entities/project_users.entity';
 
 class ProjectPostBody {
   title: string;
@@ -13,11 +13,12 @@ class ProjectPostBody {
 
 @Controller()
 export class ProjectsController {
-  constructor(private projectsService: ProjectsService){}
+  constructor(private projectsService: ProjectsService,
+    ){}
 
   @Get('/projects')
   public async index(@JwtBody() JwtBody: JwtBodyDto){
-    const projects = await this.projectsService.findAllForUser(JwtBody.userId);
+    const projects = await this.projectsService.findAllProjectsForUser(JwtBody.userId);
     return projects;
   }
 
@@ -30,6 +31,12 @@ export class ProjectsController {
     newProject.createdByUserId = JwtBody.userId;
     newProject.teamLeadId = JwtBody.userId;
     const project = await this.projectsService.createProject(newProject);
+
+    const newProjectUser = new ProjectUsers();
+    newProjectUser.projectId = project.id;
+    newProjectUser.userId = JwtBody.userId;
+    const addedProjectUser = await this.projectsService.createProjectUser(newProjectUser);
+
     return { project };
   }
 
