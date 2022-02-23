@@ -59,9 +59,21 @@ export const Project = () => {
       setTasks(allTasks);
       sortTasks(allTasks);
       const allUsers = await api.get('/users');
-
+      const projectUsers = await api.get('/projects/allUsers:id=' + project.id);
+      let userIds = [];
+      for (let index = 0; index < projectUsers.length; index++) {
+        userIds.push(projectUsers[index].userId);
+      }
+      let totalUsers = [];
+      for (let index = 0; index < allUsers.users.length; index++) {
+        for (let id = 0; id < userIds.length; id++) {
+          if (userIds[id] == allUsers.users[index].id) {
+            totalUsers.push(allUsers.users[index]);
+          }
+        }
+      }
       if (project.createdByUserId == user.id) {
-        setPeople(allUsers.users);
+        setPeople(totalUsers);
         setCanDelete(true);
       } else {
         setPeople([user]);

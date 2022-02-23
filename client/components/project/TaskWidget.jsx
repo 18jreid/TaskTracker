@@ -5,13 +5,14 @@ export const TaskWidget = ({ children, ...props }) => {
         <div className="grid grid-flow-row border-4">
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Task: {props.title}</div>
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Description: {props.description}</div>
-          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">
-            Time Estimation: {props.timeEstimation}
+          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300 text-sm">
+            Time-Estimate (Hrs): {props.timeEstimation}
           </div>
           <label for="people" className="text-center">
             Assigned: {props.assigned}
           </label>
-          <select name="people" onChange={props.onValueChange}>
+          <select name="people" onChange={props.onValueChange} className="bg-gray-300">
+            <option value={props.assigned}></option>
             {props.people.map((person) => (
               <option>{person.email}</option>
             ))}
@@ -34,13 +35,14 @@ export const TaskWidget = ({ children, ...props }) => {
         <div className="grid grid-flow-row border-4">
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Task: {props.title}</div>
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Description: {props.description}</div>
-          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">
-            Time Estimation: {props.timeEstimation}
+          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300 text-sm">
+          Time-Estimate (Hrs): {props.timeEstimation}
           </div>
           <label for="people" className="text-center">
             Assigned: {props.assigned}
           </label>
-          <select name="people" onChange={props.onValueChange}>
+          <select name="people" onChange={props.onValueChange} className="bg-gray-300">
+            <option value={props.assigned}></option>
             {props.people.map((person) => (
               <option>{person.email}</option>
             ))}
@@ -69,13 +71,14 @@ export const TaskWidget = ({ children, ...props }) => {
         <div className="grid grid-flow-row border-4">
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Task: {props.title}</div>
           <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">Description: {props.description}</div>
-          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300">
-            Time Estimation: {props.timeEstimation}
+          <div className="break-words shadow-md flex flex-col p-4 bg-gray-300 text-sm">
+          Time-Estimate (Hrs): {props.timeEstimation}
           </div>
           <label for="people" className="text-center">
             Assigned: {props.assigned}
           </label>
-          <select name="people" onChange={props.onValueChange}>
+          <select name="people" onChange={props.onValueChange} className="bg-gray-300">
+            <option value={props.assigned}></option>
             {props.people.map((person) => (
               <option>{person.email}</option>
             ))}

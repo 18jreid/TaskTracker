@@ -27,6 +27,12 @@ export class ProjectsController {
     return projects;
   }
 
+  @Get('/projects/allUsers:id')
+  public async usersFromProject(@Param('id') id: string) {
+    const projects = await this.projectsService.findAllUsersForProject(parseInt(id.slice(4)));
+    return projects;
+  }
+
   @Get('/projects:id')
   public async indexFromId(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto) {
     const projects = await this.projectsService.findProjectById(parseInt(id.slice(4)));
