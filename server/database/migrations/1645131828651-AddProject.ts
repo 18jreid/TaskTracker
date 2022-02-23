@@ -63,7 +63,7 @@ export class AddProject1645131828651 implements MigrationInterface {
         );
         await queryRunner.createTable(
             new Table({
-              name: 'project_users_user',
+              name: 'project_users',
               columns: [
                 {
                   name: 'id',
@@ -85,7 +85,7 @@ export class AddProject1645131828651 implements MigrationInterface {
             }),
         );
           await queryRunner.createForeignKey(
-            'project_users_user',
+            'project_users',
             new TableForeignKey({
               columnNames: ['userId'],
               referencedColumnNames: ['id'],
@@ -95,7 +95,7 @@ export class AddProject1645131828651 implements MigrationInterface {
         );
       
           await queryRunner.createForeignKey(
-            'project_users_user',
+            'project_users',
             new TableForeignKey({
               columnNames: ['projectId'],
               referencedColumnNames: ['id'],
