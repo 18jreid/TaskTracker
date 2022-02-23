@@ -63,7 +63,7 @@ export class ProjectsController {
 
   @Delete('/projects:id')
   public async destroy(@Param('id') id: string, @JwtBody() JwtBody: JwtBodyDto) {
-    console.log(id);
+    //console.log(id);
     const project = await this.projectsService.findProjectById(parseInt(id));
     if (project.createdByUserId !== JwtBody.userId) {
       throw new HttpException('Unauthorized', 401);

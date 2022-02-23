@@ -11,6 +11,7 @@ export const AddUser = () => {
 
   const [userEmail, setUserEmail] = useState('');
   const [user, setUser] = useState(null);
+  const [userAdded, setUserAdded] = useState(null);
 
   useEffect(async () => {
     const res = await api.get('/users/me');
@@ -29,17 +30,29 @@ export const AddUser = () => {
         myUser = users.users[x];
       }
     }
-    let worked = await api.post('/projects/newUser', {
-      projectId: projectId,
-      userId: myUser.id,
-    });
-
-    navigate('/');
+    console.log("logging myuser")
+    console.log(myUser)
+    if (myUser !== null) {
+      let worked = await api.post('/projects/newUser', {
+        projectId: projectId,
+        userId: myUser.id,
+      });
+      setUserAdded(true);
+      navigate('/');
+    }
+    else {
+      setUserAdded(false);
+    }
   };
 
   return (
     <div className="flex flex-row justify-center m-4 mt-32">
       <div className="w-96">
+        {userAdded == false && (
+          <div>
+            <h1>User not found. Please add an existing TaskTracker user</h1>
+          </div>
+        )}
         <Paper>
           <div>User Email</div>
           <Input type="text" onChange={(e) => setUserEmail(e.target.value)} />
